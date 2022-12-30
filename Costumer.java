@@ -4,9 +4,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Costumer implements Sever {
+public class Costumer implements Server {
     private String name;
     private int pin;
     private double money;
@@ -39,41 +40,47 @@ public class Costumer implements Sever {
 
             if (nPin == pin) {
                 System.out.println("Enter your new pin :");
-                int newPin = s.nextInt(4);
-                if (isValid(newPin)){
+                int newPin = s.nextInt();
+                if (isValid(newPin)&&newPin>0){
                     /**
                     use of isValid(newPin) method to check the  length of newPin is four or not
                     if four then true. Which is compulsory to type four digit pin.Here new pin is
                     input to the user.Which is replaced by old pin.
                      */
                 pin = newPin;
-                System.out.println("Pin generate Successfully");
+                System.out.println("Pin generate Successfully \uD83D\uDE00");
                 this.local();
             }
                 else {
-                    System.out.println("Pin size should be 4");
+                    System.err.println("Pin size should be length 4 or only positive  integer");
                 }
             }
 
             else{
-                System.out.println("You enter wrong pin plz Enter correct pin and Try Again.\n&&Thank you&&");
+                System.err.println("You enter wrong pin plz Enter correct pin and Try Again.\n&&Thank you&&");
 
             }
         }
         catch (Exception e){
-            System.out.println("Input format Wrong or You can must type pin length is equal to four");
+            System.err.println("Input format Wrong or You can not type pin length is equal to four");
         }
     }
     public void deposit(String k){
         System.out.println("Enter amount to deposit:");
         Scanner s=new Scanner(System.in);
         int amt=s.nextInt();
-        money=money+amt;
-        this.inquare(k,money,amt,"Add");
-        try {
-            this.fileGenerate(k);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (amt>=0) {
+            money = money + amt;
+            System.out.println("Deposit  successfully \uD83D\uDE00");
+            this.inquare(k, money, amt, "Add");
+            try {
+                this.fileGenerate(k, "Deposit", amt);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
+            System.err.println("Amount not to be less than 0");
         }
     }
 
@@ -85,36 +92,44 @@ public class Costumer implements Sever {
         if (pin==k){
             System.out.println("Enter amount to withdraw:");
             int amt= s2.nextInt();
-            if (amt<=money){
+            if (amt<=money&&amt>=0){
                money-=amt;
-                System.out.println("Withdraw Successfully\nAvailable amount is "+money);
+                System.out.println("Withdraw Successfully \uD83D\uDE00 \nAvailable amount is "+money);
                 try {
-                    this.fileGenerate(str);
+                    this.fileGenerate(str,"Withdraw",amt);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
             else{
-                System.out.println("Insufficient Balance");
+                System.err.println("Insufficient Balance  or Wrong input \uD83D\uDE15!");
             }
         }
         else {
-            System.out.println("Invalid pin Try again:");
+            System.err.println("Invalid pin Try again\uD83D\uDE15!");
         }
     }
 
     @Override
-    public void balance(String str) {
-        System.out.println("---------------------");
-        System.out.println("Name:"+name);
-        System.out.println("AccNO:"+str);
-        System.out.println("Balance:"+money);
-        this.local();
-        System.out.println("---------------------");
-        try {
-            this.fileGenerate(str);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void balance(String str) throws InputMismatchException {
+        System.out.println("Enter your pin:");
+        Scanner s=new Scanner(System.in);
+        int c=s.nextInt();
+        if(pin==c) {
+            System.out.println("---------------------");
+            System.out.println("Name:" + name);
+            System.out.println("AccNO:" + str);
+            System.out.println("Balance:" + money);
+            this.local();
+            System.out.println("---------------------");
+            try {
+                this.fileGenerate(str, "balance Generate ", (int) money);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            System.err.println("Enter wrong pin ");
         }
     }
 
@@ -122,28 +137,31 @@ public class Costumer implements Sever {
         System.out.println("Enter account to Transfer Money:");
         Scanner s3=new Scanner(System.in);
         String str2= s3.nextLine();
-        System.out.println("Enter amount to Transfer:");
-        int amt= s3.nextInt();
-        System.out.println("Enter your 4 digit  pin:");
-        int c=s3.nextInt();
-        if (pin==c) {
-            if (amt <= money) {
-                money = money - amt;
-                this.inquare(str,money,amt,"Transfer");
-                try {
-                    this.fileGenerate(str);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            else {
-                System.out.println("Balance is "+money);
-                System.out.println("Insufficient Balance");
+        if (!str.equals(str2) ) {
+            System.out.println("Enter amount to Transfer:");
+            int amt = s3.nextInt();
+            System.out.println("Enter your 4 digit  pin:");
+            int c = s3.nextInt();
+            if (pin == c) {
+                if (amt <= money) {
+                    money = money - amt;
+                    this.inquare(str, money, amt, "Transfer");
+                    try {
+                        this.fileGenerate(str, "Transfer", amt);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    System.out.println("Balance is " + money);
+                    System.err.println("Insufficient Balance\uD83D\uDE15 !");
 
+                }
+            } else {
+                System.err.println("Invalid pin \uD83D\uDE15");
             }
         }
         else {
-            System.out.println("Invalid pin");
+            System.err.println("You cant transfer amount yourself \uD83D\uDE15");
         }
     }
     public void inquare(String str,double amount,int amt,String s2){
@@ -159,7 +177,7 @@ public class Costumer implements Sever {
         System.out.println("---------------------------");
 
         try {
-            this.fileGenerate(str);
+            this.fileGenerate(str," Balance Generate Successfully", 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -170,39 +188,40 @@ public class Costumer implements Sever {
       System.out.println(time+" "+date);
 
   }
-    void fileGenerate(String str) throws IOException {
+    void fileGenerate(String str,String str2,int a) throws IOException {
         /**
         fileGenerate() method are used to generate the "example.txt" file
         in every  Transaction.And Add trows because the IoException will
         Come.
          */
-        File f=new File("Banking.txt");
+        File f=new File("BOI.txt");
         FileWriter f1=new FileWriter(f);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("-------------------\n");
+        stringBuilder.append("----------------------------------\n");
         stringBuilder.append("Bank Of India  Mini statement:\n");
         stringBuilder.append("Name:");
         stringBuilder.append(name);
         stringBuilder.append("\n");
         stringBuilder.append("Account No:");
         stringBuilder.append(str);
-        stringBuilder.append("\n");
+        stringBuilder.append("\n"+str2+" "+a+"\n");
         stringBuilder.append("Amount:");
         stringBuilder.append(money);
         stringBuilder.append("");
         stringBuilder.append("\n"+time+"  "+date);
-        stringBuilder.append("\n---------------------");
+        stringBuilder.append("\n----------------------------------");
         String p= stringBuilder.toString();
         f1.write(p);
         f1.close();
     }
+
    boolean isValid(int pin){
         /**
         Here check the input is four digit or not
          */
         int i=0;
         while (pin!=0){
-            int r=pin/10;
+            pin =pin/10;
             i++;
         }
         if (i==4){

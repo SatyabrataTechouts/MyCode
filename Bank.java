@@ -13,7 +13,7 @@ public class Bank {
         customer  name ,Atm pin,money.
         * */
         HashMap<String, Costumer> hashMap=new HashMap<>();
-        hashMap.put("7890123456",new Costumer("Satyabrata Barik",1234,12000));
+        hashMap.put("\uD83D\uDE00",new Costumer("Satyabrata Barik",1234,12000));
         hashMap.put("7890123470",new Costumer("Sk Tajudhin",4456,12300));
         hashMap.put("7890128890",new Costumer("Padma nava Tripathy",7890,14000));
         hashMap.put("7890122356",new Costumer("Hrusikesh Nayak",3456,120000));
@@ -26,7 +26,7 @@ public class Bank {
          **/do {
             try {
                 Scanner sc =new Scanner(System.in);
-                System.err.println("Enter your Account Number:");
+                System.out.println("Enter your Account Number:");
 
                 String str = sc.next();
                 while(!str.matches("[0-9]+")){
@@ -48,7 +48,7 @@ public class Bank {
                          */
                         System.out.println("Enter to 1->Deposit Money\nEnter to 2->Withdraw Money");
                         System.out.println("Enter to 3->Money Transfer\nEnter to 4->Mini Statement");
-                        System.out.println("Enter to 5->Pin Chance");
+                        System.out.println("Enter to 5->Pin Change");
                         int choice = sc.nextInt();
                         switch (choice) {
                             case 1:
@@ -93,7 +93,7 @@ public class Bank {
                                 }
                                 break;
                             default:
-                                System.err.println("**Invalid Entry**\n$$Thank You $$");
+                                System.err.println("**Invalid Entry\uD83D\uDE15**\n$$Thank You $$");
                         }
                     }
                     else {
@@ -104,14 +104,14 @@ public class Bank {
                              * the hashmap size then it execute the above if() statement and show the
                              * output Account Mismatched.
                              */
-                            System.err.println("Account Mismatched");
+                            System.err.println("Account Mismatched \uD83D\uDE15!");
                         }
                     }
                 }
 
 
             } catch (Exception e) {
-                System.out.println(e);
+                System.err.println("You input wrong or something went to Wrong ");
             }
         }
         while (true);
