@@ -1,7 +1,5 @@
 package onlineBankingSystem;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.InputMismatchException;
@@ -75,6 +73,7 @@ public class Costumer implements Server {
             this.inquare(k, money, amt, "Add");
             try {
                 this.fileGenerate(k, "Deposit", amt);
+                this.statement1(k,0,amt);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -97,6 +96,7 @@ public class Costumer implements Server {
                 System.out.println("Withdraw Successfully \uD83D\uDE00 \nAvailable amount is "+money);
                 try {
                     this.fileGenerate(str,"Withdraw",amt);
+                    this.statement1(str,amt,0);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -124,6 +124,7 @@ public class Costumer implements Server {
             System.out.println("---------------------");
             try {
                 this.fileGenerate(str, "balance Generate ", (int) money);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -148,6 +149,7 @@ public class Costumer implements Server {
                     this.inquare(str, money, amt, "Transfer");
                     try {
                         this.fileGenerate(str, "Transfer", amt);
+                        this.statement1(str,amt,0);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -229,4 +231,21 @@ public class Costumer implements Server {
         }
         return false;
    }
+
+  public  void statement1(String str,int amd,int amc) throws IOException {
+        File f=new File("Bank statement.txt");
+        FileWriter f1=new FileWriter(f,true);
+        f1.write("Account no->"+str+" \n");
+        f1.append("date :"+date+"  Debited:"+amd+"   credited:"+amc +"  Total:"+money);
+        f1.close();
+
+   }
+    void statement(String str) throws IOException {
+        BufferedReader br=new BufferedReader(new FileReader("Bank statement.txt"));
+        String st;
+        while((st= br.readLine())!=null){
+            System.out.println(st);
+        }
+
+    }
 }
