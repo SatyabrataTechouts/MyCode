@@ -224,7 +224,7 @@ public class Costumer implements Server {
                 case 1:
                     System.out.println("Enter acc number:");
                     acc = s3.next();
-                    while(!(acc.matches("[0-9]+")&&acc.length()==10)){
+                    while(!acc.matches("[0-9]{10}+") ){
 
                         System.err.println("Input a valid Account number which length is should be 10");
                         acc=s3.nextLine();
@@ -236,7 +236,7 @@ public class Costumer implements Server {
                     System.out.println("Enter upi id:");
                      acc=s3.next();
                     while (!acc.matches("^[\\w.-]+@[\\w.-]+$")){
-                        System.err.println("email/phone number@bankname/paymentgateway");
+                        System.err.println("email/phone number@bankname/payment gateway");
                         acc=s3.next();
 
 

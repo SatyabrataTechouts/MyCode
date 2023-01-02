@@ -21,12 +21,10 @@ public class Bank {
         hashMap.put("7890123345", new Costumer("Harekrushna Das", 7789, 1200023));
         hashMap.put("7890123235", new Costumer("Jagannath Barik", 7873, 120004));
 
-        int d = 0;
         /**
          Here try to handle the InputMismatchException using try and catch block.
          **/
-        int p = 0;
-
+        int d = 0;
         do {
             System.out.println("***\uD83D\uDE4F Welcome to Bank Of India \uD83D\uDE4F***");
 
@@ -34,13 +32,13 @@ public class Bank {
             System.out.println("Enter your Account Number:");
 
             String str = sc.next();
-            while (!str.matches("[0-9]+")) {
+            while (!str.matches("[0-9]{10}+")) {
                 /**
                  * Here use Regex because we can take the account number as a String so Any input
                  * can be store into the str variable.This is writing for  only taken integer as
                  * a string.
                  */
-                System.out.println("You Enter a wrong format please enter a correct account Number: ");
+                System.err.println("You Enter a invalid  please enter a correct 10 digit account Number: ");
                 str = sc.next();
 
             }
@@ -48,7 +46,6 @@ public class Bank {
             for (Map.Entry<String, Costumer> h : hashMap.entrySet()) {
                 String r = h.getKey();
                 if (r.equals(str)) {
-//                    try {
                         do {
 
                             /**
@@ -144,6 +141,7 @@ public class Bank {
                         }
 
                         while (true && d == 0);
+                        d=0;
                 }
                 else {
                     t++;
@@ -153,13 +151,12 @@ public class Bank {
                          * the hashmap size then it execute the above if() statement and show the
                          * output Account Mismatched.
                          */
-                        System.err.println("Account Mismatched \uD83D\uDE15!");
+                        System.err.println("Account mismatched \uD83D\uDE15!");
 
                     }
                 }
 
             }
-
 
         }
         while (true);
